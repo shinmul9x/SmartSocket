@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Smart Socket</string>
+    <string name="activity_setting_label">Setting</string>
+    <string name="et_username_hint">username</string>
+    <string name="btn_login">Login</string>
+    <string name="et_password_hint">password</string>
 </resources>
