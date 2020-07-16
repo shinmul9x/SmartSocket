@@ -1,6 +1,8 @@
 package com.smartsocket.service.api
 
 import androidx.lifecycle.MutableLiveData
+import com.smartsocket.service.model.Home
+import com.smartsocket.service.model.HomeResponse
 import com.smartsocket.service.model.LoginToken
 import com.smartsocket.utils.Debug
 import retrofit2.Call
@@ -11,6 +13,10 @@ import javax.inject.Singleton
 
 @Singleton
 class SmartSocketApi @Inject constructor(private val smartSocketService: SmartSocketService) {
+    init {
+        var index = 0
+        Debug().d("number of instance smartsocketapi: ${++index}")
+    }
 
     fun login(username: String, password: String): MutableLiveData<String> {
         val data = MutableLiveData<String>()
@@ -30,8 +36,29 @@ class SmartSocketApi @Inject constructor(private val smartSocketService: SmartSo
         return data
     }
 
-    init {
-        var index = 0
-        Debug().d("number of instance smartsocketapi: ${++index}")
+    fun getHomeList(token: String): MutableLiveData<ArrayList<Home?>> {
+        val data = MutableLiveData<ArrayList<Home?>>()
+        smartSocketService.getHomeList(token).enqueue(object : Callback<HomeResponse> {
+            override fun onFailure(call: Call<HomeResponse>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call<HomeResponse>, response: Response<HomeResponse>) {
+                when {
+                    response.code() == 200 -> {
+                        data.value = response.body()?.home?.let { ArrayList(it) }
+                        Debug().d("number of home: ${response.body()?.home?.size}")
+                    }
+                    response.body()?.message == "miss token" -> {
+                        data.value = null
+                    }
+                    else -> {
+                        data.value = ArrayList()
+                    }
+                }
+            }
+
+        })
+        return data
     }
 }

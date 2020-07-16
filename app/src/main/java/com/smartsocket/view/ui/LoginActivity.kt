@@ -1,11 +1,13 @@
 package com.smartsocket.view.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.smartsocket.R
+import com.smartsocket.SmartSocketApp
 import com.smartsocket.viewmodel.LoginViewModel
 import com.smartsocket.viewmodel.ViewModelFactory
 import dagger.android.AndroidInjection
@@ -20,17 +22,34 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         AndroidInjection.inject(this)
+        initAppBar()
         initActions()
+    }
+
+    private fun initAppBar() {
+        setSupportActionBar(toolbar_login)
     }
 
     private fun initActions() {
         btn_login.setOnClickListener {
-            val loginViewModel = ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
+            val loginViewModel =
+                ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
             val username = et_username.text.toString()
             val password = et_password.text.toString()
+
             loginViewModel.getLoginToken(username, password).observe(this, Observer {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                if (it == "") {
+                    Toast.makeText(this, "Login fail! Try again.", Toast.LENGTH_SHORT).show()
+                    return@Observer
+                }
+                (application as SmartSocketApp).dataManager.saveToken(it)
+                openMainActivity()
+                this.finish()
             })
         }
+    }
+
+    private fun openMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }
