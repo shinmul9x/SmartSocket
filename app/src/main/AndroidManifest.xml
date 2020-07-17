@@ -20,6 +20,8 @@
         <activity android:name=".view.ui.LoginActivity" />
 
         <activity android:name=".view.ui.MainActivity" />
+        <activity android:name=".view.ui.SettingActivity" />
+        <activity android:name=".view.ui.RoomActivity" />
     </application>
 
 </manifest>

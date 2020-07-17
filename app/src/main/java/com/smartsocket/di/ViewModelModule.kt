@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.smartsocket.viewmodel.HomeViewModel
 import com.smartsocket.viewmodel.LoginViewModel
+import com.smartsocket.viewmodel.RoomViewModel
 import com.smartsocket.viewmodel.ViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -24,4 +25,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
     internal abstract fun homeViewModel(homeViewModel: HomeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RoomViewModel::class)
+    internal abstract fun roomViewModel(roomViewModel: RoomViewModel): ViewModel
 }

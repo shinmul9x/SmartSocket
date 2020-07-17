@@ -5,4 +5,7 @@
     <string name="btn_login">Login</string>
     <string name="et_password_hint">password</string>
     <string name="background_splash">background</string>
+    <string name="et_host_address_hint">host address</string>
+    <string name="btn_submit">Submit</string>
+    <string name="des_btn_drop_item_device">button drop item device</string>
 </resources>

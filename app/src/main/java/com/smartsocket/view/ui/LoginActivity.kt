@@ -2,6 +2,8 @@ package com.smartsocket.view.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -38,7 +40,10 @@ class LoginActivity : AppCompatActivity() {
             val password = et_password.text.toString()
 
             loginViewModel.getLoginToken(username, password).observe(this, Observer {
-                if (it == "") {
+                if (it.isNullOrEmpty()) {
+                    Toast.makeText(this, "Check internet or host address", Toast.LENGTH_SHORT).show()
+                    return@Observer
+                } else if (it == "") {
                     Toast.makeText(this, "Login fail! Try again.", Toast.LENGTH_SHORT).show()
                     return@Observer
                 }
@@ -51,5 +56,15 @@ class LoginActivity : AppCompatActivity() {
 
     private fun openMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_login, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        startActivity(Intent(this@LoginActivity, SettingActivity::class.java))
+        return super.onOptionsItemSelected(item)
     }
 }

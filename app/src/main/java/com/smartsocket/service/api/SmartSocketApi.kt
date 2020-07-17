@@ -1,9 +1,7 @@
 package com.smartsocket.service.api
 
 import androidx.lifecycle.MutableLiveData
-import com.smartsocket.service.model.Home
-import com.smartsocket.service.model.HomeResponse
-import com.smartsocket.service.model.LoginToken
+import com.smartsocket.service.model.*
 import com.smartsocket.utils.Debug
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,7 +20,7 @@ class SmartSocketApi @Inject constructor(private val smartSocketService: SmartSo
         val data = MutableLiveData<String>()
         smartSocketService.getLoginToken(username).enqueue(object : Callback<LoginToken> {
             override fun onFailure(call: Call<LoginToken>, t: Throwable) {
-                data.value = ""
+                data.value = null
             }
 
             override fun onResponse(call: Call<LoginToken>, response: Response<LoginToken>) {
@@ -40,7 +38,7 @@ class SmartSocketApi @Inject constructor(private val smartSocketService: SmartSo
         val data = MutableLiveData<ArrayList<Home?>>()
         smartSocketService.getHomeList(token).enqueue(object : Callback<HomeResponse> {
             override fun onFailure(call: Call<HomeResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                data.value = null
             }
 
             override fun onResponse(call: Call<HomeResponse>, response: Response<HomeResponse>) {
@@ -58,6 +56,30 @@ class SmartSocketApi @Inject constructor(private val smartSocketService: SmartSo
                 }
             }
 
+        })
+        return data
+    }
+
+    fun getRoomList(token: String, homeId: Int): MutableLiveData<ArrayList<Room?>> {
+        val data = MutableLiveData<ArrayList<Room?>>()
+        smartSocketService.getRoomList(token, homeId).enqueue(object : Callback<RoomResponse> {
+            override fun onFailure(call: Call<RoomResponse>, t: Throwable) {
+                data.value = null
+            }
+
+            override fun onResponse(call: Call<RoomResponse>, response: Response<RoomResponse>) {
+                when {
+                    response.code() == 200 -> {
+                        data.value = response.body()?.room?.let { ArrayList(it) }
+                    }
+                    response.body()?.message == "miss token" -> {
+                        data.value = null
+                    }
+                    else -> {
+                        data.value = ArrayList()
+                    }
+                }
+            }
         })
         return data
     }

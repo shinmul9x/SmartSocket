@@ -2,6 +2,7 @@ package com.smartsocket.di
 
 import com.smartsocket.view.ui.LoginActivity
 import com.smartsocket.view.ui.MainActivity
+import com.smartsocket.view.ui.RoomActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -13,4 +14,7 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector
     abstract fun contributeMainActivity(): MainActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeRoomActivity(): RoomActivity
 }

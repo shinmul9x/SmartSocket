@@ -3,6 +3,7 @@ package com.smartsocket.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.smartsocket.SmartSocketApp
 import com.smartsocket.service.api.ApiManager
 import com.smartsocket.service.api.SmartSocketService
 import com.smartsocket.utils.DataManager
@@ -19,7 +20,7 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideSmartSocketService(): SmartSocketService {
-        return ApiManager().getApiService()
+        return ApiManager(application as SmartSocketApp).getApiService()
     }
 
     @Provides

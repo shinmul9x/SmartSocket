@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.smartsocket.R
 import com.smartsocket.SmartSocketApp
+import com.smartsocket.utils.Constant
 import com.smartsocket.view.adapter.HomeAdapter
 import com.smartsocket.viewmodel.HomeViewModel
 import com.smartsocket.viewmodel.ViewModelFactory
@@ -23,7 +24,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    lateinit var homeAdapter: HomeAdapter
+    private lateinit var homeAdapter: HomeAdapter
     private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +41,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initActions() {
+        // handle events click item home
         homeViewModel.itemHomeSelectedListener().observe(this, Observer {
-            Toast.makeText(this, "Home id: $it", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RoomActivity::class.java)
+            intent.putExtra(Constant.HOME_ID_CONSTANT, it)
+            startActivity(intent)
         })
     }
 
@@ -60,6 +64,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         homeViewModel.getHomeList((application as SmartSocketApp).dataManager.getToken()!!)
             .observe(this, Observer {
+                if (it.isNullOrEmpty()) {
+                    Toast.makeText(this, "Check internet or host address", Toast.LENGTH_SHORT).show()
+                    return@Observer
+                }
                 homeAdapter.setHomeList(it)
             })
     }
